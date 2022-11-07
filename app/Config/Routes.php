@@ -39,6 +39,14 @@ $routes->get('/', 'Home::index');
 
 // Public
 $routes->resource('products');
+
+// Authentication
+$routes->group("api", function ($routes) {
+    $routes->post("register", "Register::index");
+    $routes->post("login", "Login::index");
+    $routes->get("users", "User::index", ['filter' => 'authFilter']);
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
