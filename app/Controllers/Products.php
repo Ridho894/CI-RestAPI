@@ -28,4 +28,56 @@ class Products extends ResourceController
             return $this->failNotFound('No Data Found with id ' . $id);
         }
     }
+
+    // Update Product
+    public function update($id = null)
+    {
+        $model = new ProductModel();
+        $json = $this->request->getJSON();
+        if ($json) {
+            $data = [
+                'name' => $json->name,
+                'price' => $json->price,
+                'stock' => $json->stock,
+            ];
+        } else {
+            $input = $this->request->getRawInput();
+            $data = [
+                'name' => $input['name'],
+                'price' => $input['price'],
+                'stock' => $input['stock'],
+            ];
+        }
+        // Insert to Database
+        $model->update($id, $data);
+        $response = [
+            'status'   => 200,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Data Updated'
+            ]
+        ];
+        return $this->respond($response);
+    }
+
+    // Delete Product
+    public function delete($id = null)
+    {
+        $model = new ProductModel();
+        $data = $model->find($id);
+        if ($data) {
+            $model->delete($id);
+            $response = [
+                'status'   => 200,
+                'error'    => null,
+                'messages' => [
+                    'success' => 'Data Deleted'
+                ]
+            ];
+
+            return $this->respondDeleted($response);
+        } else {
+            return $this->failNotFound('No Data Found with id ' . $id);
+        }
+    }
 }
