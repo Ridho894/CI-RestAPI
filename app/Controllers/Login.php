@@ -32,7 +32,7 @@ class Login extends BaseController
 
         $key = getenv('JWT_SECRET');
         $iat = time(); // current timestamp value
-        $exp = $iat + 3600;
+        $exp = 86400;
 
         $payload = array(
             "iss" => "Issuer of the JWT",
@@ -46,8 +46,10 @@ class Login extends BaseController
         $token = JWT::encode($payload, $key, 'HS256');
 
         $response = [
-            'message' => 'Login Succesful',
-            'token' => $token
+            'token_type' => "Bearer",
+            'expires_in' => $exp,
+            'access_token' => $token,
+            'user' => $user
         ];
 
         return $this->respond($response, 200);
